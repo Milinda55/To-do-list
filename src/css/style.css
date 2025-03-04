@@ -1,0 +1,36 @@
+@import url('https://fonts.googleapis.com/css2?family=Audiowide&family=Ubuntu:ital,wght@0,300;0,400;0,500;0,700;1,300;1,400;1,500;1,700&display=swap');
+@import "bootstrap";
+@import "bootstrap-icons";
+@import "animate.css";
+
+body {
+    font-family: Ubuntu, sans-serif;
+}
+
+#completed-task-list .task-item label {
+    text-decoration: line-through;
+}
+
+.task-item label, input, i {
+    cursor: pointer;
+}
+
+.task-item:hover i.bi-pencil {
+    display: inline;
+}
+
+.task-item i.bi-pencil {
+    display: none;
+}
+
+.task-item i.bi-pencil:hover {
+    color: green;
+}
+
+.task-item i.bi-trash:hover {
+    color: red;
+}
+
+.task-item:hover {
+    background-color: lightgray;
+}
