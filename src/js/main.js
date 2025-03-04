@@ -13,7 +13,7 @@ class Task {
     status;
 
     constructor(id, description, status = false) {
-        this.id = id;
+        this.id = 'task-' + id;
         this.description = description;
         this.status = status;
     }
@@ -32,22 +32,19 @@ $("#frm-task").on('submit', () => {
     const taskDescription = $("#txt-task").val().trim();
     const taskId = taskLists.length;
     taskLists.push(new Task(taskId, taskDescription));
+    renderTasks();
 });
 
-$('.task-item-input[type="checkbox"]').on('change', (e) => {
-    alert(e.target.id);
-    const task = taskLists.find(task => task.id === e.target.id);
+$('#task-list, #completed-task-list').on('change','.task-item input[type="checkbox"]', (e)=>{
+    const task = taskLists.find(task => task.id === e.currentTarget.id);
     task.status = !task.status;
     renderTasks();
-
-})
+});
 
 function renderTasks(){
-
     $("#task-list > section, #completed-task-list > section").empty();
     const noTask = $("#no-task");
     (taskLists.length) ? noTask.hide() : noTask.show();
-
     for (const {id, description, status} of taskLists) {
         const task = `
             <div class="task-item d-flex justify-content-between
