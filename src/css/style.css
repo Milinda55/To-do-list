@@ -6,3 +6,11 @@
 body {
     font-family: Ubuntu, sans-serif;
 }
+
+#completed-task-list .task-item label {
+
+}
+
+.task-item:hover {
+    background-color: lightgray;
+}
