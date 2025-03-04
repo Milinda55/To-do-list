@@ -33,8 +33,17 @@ let currentTask = null;
 $("#frm-task").on('submit', () => {
     // $("#tasks-list #no-task").hide();
     const txtTask = $("#txt-task");
+    if (!currentTask) {
+        taskLists.push(new Task(++lastTaskId, txtTask.val().trim()));
+    }
+    else {
+       currentTask.description =  txtTask.val().trim();
+       currentTask = null;
+        $("#frm-task button").text("Add");
+
+    }
+
     // const taskId = taskLists.length;
-    taskLists.push(new Task(++lastTaskId, txtTask.val().trim()));
     renderTasks();
     txtTask.val("").trigger('focus');
 });
@@ -50,14 +59,14 @@ $('#task-list > section, #completed-task-list > section')
     taskLists.splice(taskIndex, 1);
     renderTasks();
 }).on('click', '.bi-pencil', (e) => {
-    // alert("pencil")
+    $(".task-item-selected").removeClass('task-item-selected');
     const taskId = $(e.currentTarget).parents(".task-item")
         .addClass('task-item-selected')
         .find('input[type="checkbox"]').prop("id");
     currentTask = taskLists.find(task => task.id === taskId);
-    $("#txt-task").val(currentTask.description);
+    $("#txt-task").val(currentTask.description)
+        .trigger('focus').trigger('select');
     $("#frm-task button").text("Update");
-
 });
 
 function renderTasks(){
