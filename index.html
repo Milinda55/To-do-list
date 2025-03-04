@@ -34,7 +34,8 @@
         </div>
       </form>
     </section>
-    <section id="task-list" class="p-2">
+    <div id="task-list-wrapper" class="d-none">
+      <section id="task-list" class="p-2">
       <!--          <h5 class="text-secondary">Tasks</h5>-->
       <div id="no-task" class="text-center text-secondary-emphasis">
         No tasks. Add your tasks.
@@ -55,11 +56,20 @@
         <!--            </div>-->
       </section>
     </section>
-    <section id="completed-task-list" class="p-2">
+      <section id="completed-task-list" class="p-2">
       <h6 class="text-secondary border-bottom p-2">
         Completed Tasks</h6>
       <section></section>
     </section>
+    </div>
+
+    <div id="loader-wrapper"
+      class="flex-column align-items-center">
+      <div class="loader"></div>
+      <hr>
+      <div class="mt-2">Please wait we are working on your data...</div>
+
+    </div>
   </main>
 </section>
 </body>

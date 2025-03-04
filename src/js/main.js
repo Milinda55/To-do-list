@@ -1,11 +1,6 @@
 import $ from 'jquery';
-
-// const taskItem = $(".task-item");
-
-// for (let i = 0; i < 5; i++) {
-//     $("#tasks-list").append(taskItem.clone());
-//     $("#completed-task-list").append(taskItem.clone());
-// }
+import {db} from './firebase-config.js';
+import {addDoc, collection, deleteDoc, doc, getDocs, serverTimestamp, updateDoc, query, orderBy} from "firebase/firestore";
 
 class Task {
     id;
@@ -19,40 +14,51 @@ class Task {
     }
 }
 
-const taskLists = [new Task(1, "Task 1"),
-    new Task(2, "Task 2"),
-    new Task(3, "Task 3", true),
-    new Task(4, "Task 4"),
-    new Task(5, "Task 5", true)];
+const taskLists = [];
 
+await loadDbTasks();
 renderTasks();
 
-let lastTaskId = taskLists.length ;
+$("#loader-wrapper").addClass("d-none");
+$("#task-list-wrapper").removeClass("d-none");
+
+
+//let lastTaskId = taskLists.length;
 let currentTask = null;
 
-$("#frm-task").on('submit', () => {
+$("#frm-task").on('submit', async () => {
     const txtTask = $("#txt-task");
-    if (!currentTask){
-        taskLists.push(new Task(++lastTaskId, txtTask.val().trim()));
-    }else{
-        currentTask.description = txtTask.val().trim();
-        currentTask = null;
-        $("#frm-task button").text('Add');
+    if (!currentTask) {
+        const taskId = await addDbTask(txtTask.val().trim());
+        if (taskId)
+            taskLists.push(new Task(taskId, txtTask.val().trim()));
+    } else {
+        if (await updateDbTaskStatus(currentTask.id,
+            txtTask.val().trim(), currentTask.status)) {
+            currentTask.description = txtTask.val().trim();
+            currentTask = null;
+            $("#frm-task button").text('Add');
+        }
     }
     renderTasks();
     txtTask.val("").trigger('focus');
 });
 
 $('#task-list > section, #completed-task-list > section')
-    .on('change', '.task-item input[type="checkbox"]', (e) => {
+    .on('change', '.task-item input[type="checkbox"]', async (e) => {
         const task = taskLists.find(task => task.id === e.currentTarget.id);
-        task.status = !task.status;
-        renderTasks();
-    }).on('click', '.bi-trash', (e) => {
+        if (await updateDbTaskStatus(task.id,
+            task.description, !task.status)) {
+            task.status = !task.status;
+            renderTasks();
+        }
+    }).on('click', '.bi-trash', async (e) => {
     const taskId = $(e.currentTarget).parents(".task-item").find('input[type="checkbox"]').prop("id");
     const taskIndex = taskLists.findIndex(task => task.id === taskId);
-    taskLists.splice(taskIndex, 1);
-    renderTasks();
+    if (await deleteDbTask(taskId)) {
+        taskLists.splice(taskIndex, 1);
+        renderTasks();
+    }
 }).on('click', '.bi-pencil', (e) => {
     $(".task-item-selected").removeClass('task-item-selected');
     const taskId = $(e.currentTarget).parents(".task-item")
@@ -64,7 +70,7 @@ $('#task-list > section, #completed-task-list > section')
     $("#frm-task button").text("Update");
 });
 
-function renderTasks(){
+function renderTasks() {
     $("#task-list > section, #completed-task-list > section").empty();
     const noTask = $("#no-task");
     (taskLists.length) ? noTask.hide() : noTask.show();
@@ -75,7 +81,7 @@ function renderTasks(){
               <div class="form-check">
                 <input class="form-check-input" type="checkbox" 
                 value="" id="${id}"
-                ${status ? 'checked': ''}>
+                ${status ? 'checked' : ''}>
                 <label class="form-check-label" 
                 for="${id}">
                   ${description}
@@ -88,18 +94,67 @@ function renderTasks(){
             </div>        
         `;
         $(!status ? "#task-list > section" :
-            "#completed-task-list > section").append(task);
+            "#completed-task-list > section").prepend(task);
     }
 }
 
 $("#chk-mode")
-
     .on('change', function () {
-    const darkMode = $(this).prop('checked');
+        const darkMode = $(this).prop("checked");
         $("html").attr("data-bs-theme", darkMode ? "dark" : "light");
+    })
 
-})
-if (matchMedia('(prefers-color-scheme: dark)').matches){
+if (matchMedia('(prefers-color-scheme: dark)').matches) {
     $("#chk-mode").trigger('click');
 }
 
+async function loadDbTasks() {
+    const collectionRef = collection(db, "/task");
+    const docsSnapshot = await getDocs(query(collectionRef, orderBy("createdAt")));
+    docsSnapshot.forEach(doc => {
+        taskLists.push(new Task(doc.id,
+            doc.data().description,
+            doc.data().status));
+    });
+}
+
+async function addDbTask(description, status = false) {
+    try {
+        const collectionRef = collection(db, "/task");
+        const docRef = await addDoc(collectionRef, {
+            description,
+            status,
+            createdAt: serverTimestamp()
+        });
+        return docRef.id;
+    } catch (e) {
+        console.log(e);
+    }
+}
+
+async function deleteDbTask(taskId) {
+    try {
+        taskId = taskId.replace('task-', '');
+        const docRef = doc(db, `/task/${taskId}`);
+        await deleteDoc(docRef);
+        return true;
+    } catch (e) {
+        console.log(e);
+        return false;
+    }
+}
+
+async function updateDbTaskStatus(taskId, description, status) {
+    try {
+        taskId = taskId.replace('task-', '');
+        const docRef = doc(db, `/task/${taskId}`);
+        await updateDoc(docRef, {
+            description,
+            status
+        });
+        return true;
+    } catch (e) {
+        console.log(e);
+        return false;
+    }
+}
