@@ -27,12 +27,15 @@ const taskLists = [new Task(1, "Task 1"),
 
 renderTasks();
 
+let lastTaskId = taskLists.length ;
+
 $("#frm-task").on('submit', () => {
-    $("#tasks-list #no-task").hide();
-    const taskDescription = $("#txt-task").val().trim();
-    const taskId = taskLists.length;
-    taskLists.push(new Task(taskId, taskDescription));
+    // $("#tasks-list #no-task").hide();
+    const txtTask = $("#txt-task");
+    // const taskId = taskLists.length;
+    taskLists.push(new Task(++lastTaskId, txtTask.val().trim()));
     renderTasks();
+    txtTask.val("").trigger('focus');
 });
 
 $('#task-list, #completed-task-list').on('change','.task-item input[type="checkbox"]', (e)=>{
@@ -40,6 +43,7 @@ $('#task-list, #completed-task-list').on('change','.task-item input[type="checkb
     task.status = !task.status;
     renderTasks();
 });
+
 
 function renderTasks(){
     $("#task-list > section, #completed-task-list > section").empty();
