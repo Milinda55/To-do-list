@@ -38,12 +38,17 @@ $("#frm-task").on('submit', () => {
     txtTask.val("").trigger('focus');
 });
 
-$('#task-list, #completed-task-list').on('change','.task-item input[type="checkbox"]', (e)=>{
-    const task = taskLists.find(task => task.id === e.currentTarget.id);
-    task.status = !task.status;
+$('#task-list > section, #completed-task-list > section')
+    .on('change', '.task-item input[type="checkbox"]', (e) => {
+        const task = taskLists.find(task => task.id === e.currentTarget.id);
+        task.status = !task.status;
+        renderTasks();
+    }).on('click', '.bi-trash', (e) => {
+    const taskId = $(e.currentTarget).parents(".task-item").find('input[type="checkbox"]').prop("id");
+    const taskIndex = taskLists.findIndex(task => task.id === taskId);
+    taskLists.splice(taskIndex, 1);
     renderTasks();
 });
-
 
 function renderTasks(){
     $("#task-list > section, #completed-task-list > section").empty();
