@@ -11,8 +11,10 @@ body {
     text-decoration: line-through;
 }
 
-.task-item label, input, i {
-    cursor: pointer;
+.task-item {
+    label, input, i {
+        cursor: pointer;
+    }
 }
 
 .task-item:hover i.bi-pencil {
@@ -24,7 +26,7 @@ body {
 }
 
 .task-item i.bi-pencil:hover {
-    color: green;
+    color: blue;
 }
 
 .task-item i.bi-trash:hover {
