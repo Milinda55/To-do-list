@@ -31,19 +31,14 @@ let lastTaskId = taskLists.length ;
 let currentTask = null;
 
 $("#frm-task").on('submit', () => {
-    // $("#tasks-list #no-task").hide();
     const txtTask = $("#txt-task");
-    if (!currentTask) {
+    if (!currentTask){
         taskLists.push(new Task(++lastTaskId, txtTask.val().trim()));
+    }else{
+        currentTask.description = txtTask.val().trim();
+        currentTask = null;
+        $("#frm-task button").text('Add');
     }
-    else {
-       currentTask.description =  txtTask.val().trim();
-       currentTask = null;
-        $("#frm-task button").text("Add");
-
-    }
-
-    // const taskId = taskLists.length;
     renderTasks();
     txtTask.val("").trigger('focus');
 });
@@ -96,3 +91,10 @@ function renderTasks(){
             "#completed-task-list > section").append(task);
     }
 }
+
+$("#chk-mode").on('change', function () {
+    const darkMode = $(this).prop('checked');
+        $("html").attr("data-bs-theme", darkMode ? "dark" : "light");
+
+
+});
