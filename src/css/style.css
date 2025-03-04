@@ -17,6 +17,10 @@ body {
     }
 }
 
+.task-item-selected {
+    outline: 1px solid dodgerblue;
+}
+
 .task-item:hover i.bi-pencil {
     display: inline;
 }

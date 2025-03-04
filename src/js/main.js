@@ -51,12 +51,12 @@ $('#task-list > section, #completed-task-list > section')
     renderTasks();
 }).on('click', '.bi-pencil', (e) => {
     // alert("pencil")
-    const taskId = $(e.currentTarget).parents(".task-item").find('input[type="checkbox"]').prop("id");
+    const taskId = $(e.currentTarget).parents(".task-item")
+        .addClass('task-item-selected')
+        .find('input[type="checkbox"]').prop("id");
     currentTask = taskLists.find(task => task.id === taskId);
     $("#txt-task").val(currentTask.description);
     $("#frm-task button").text("Update");
-
-
 
 });
 
