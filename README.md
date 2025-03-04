@@ -24,7 +24,7 @@ The **To-Do List App** is a web-based task management application built with **H
     ```
 2. Navigate to the project folder:
     ```bash
-    cd to-do-list-app
+    cd To-do-list
     ```
 3. Install dependencies (if applicable) and start using.
 
