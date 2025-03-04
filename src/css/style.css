@@ -8,7 +8,27 @@ body {
 }
 
 #completed-task-list .task-item label {
+    text-decoration: line-through;
+}
 
+.task-item label, input, i {
+    cursor: pointer;
+}
+
+.task-item:hover i.bi-pencil {
+    display: inline;
+}
+
+.task-item i.bi-pencil {
+    display: none;
+}
+
+.task-item i.bi-pencil:hover {
+    color: green;
+}
+
+.task-item i.bi-trash:hover {
+    color: red;
 }
 
 .task-item:hover {
