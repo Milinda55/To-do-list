@@ -1,8 +1,19 @@
 import './auth.js';
 import $ from 'jquery';
 import {auth, db} from './firebase-config.js';
-import {query, orderBy, addDoc, collection, deleteDoc, doc, getDocs, serverTimestamp, updateDoc} from "firebase/firestore";
-import {onAuthStateChanged} from "firebase/auth";
+import {
+    addDoc,
+    collection,
+    deleteDoc,
+    doc,
+    getDocs,
+    orderBy,
+    query,
+    serverTimestamp,
+    updateDoc,
+    where
+} from "firebase/firestore";
+import {onAuthStateChanged, signOut} from "firebase/auth";
 
 class Task {
     id;
@@ -16,17 +27,17 @@ class Task {
     }
 }
 
-const taskLists = [];
+let taskLists = [];
 let loggedUser = null;
 
-onAuthStateChanged(auth, async user=>{
-    if (user){
+onAuthStateChanged(auth, async user => {
+    if (user) {
         loggedUser = user.email;
         await loadDbTasks();
         renderTasks();
         $("#loader-wrapper").addClass("d-none");
         $("#task-lists-wrapper").removeClass("d-none");
-    }else{
+    } else {
         loggedUser = null;
     }
 });
@@ -119,6 +130,7 @@ if (matchMedia('(prefers-color-scheme: dark)').matches) {
 async function loadDbTasks() {
     const collectionRef = collection(db, "/task");
     const docsSnapshot = await getDocs(query(collectionRef,
+        where("user", "==", loggedUser),
         orderBy("createdAt")));
     docsSnapshot.forEach(doc => {
         taskLists.push(new Task(doc.id,
@@ -133,7 +145,8 @@ async function addDbTask(description, status = false) {
         const docRef = await addDoc(collectionRef, {
             description,
             status,
-            createdAt: serverTimestamp()
+            createdAt: serverTimestamp(),
+            user: loggedUser
         });
         return docRef.id;
     } catch (e) {
@@ -167,3 +180,8 @@ async function updateDbTaskStatus(taskId, description, status) {
         return false;
     }
 }
+
+$("#btn-sign-out").on('click', async ()=>{
+    await signOut(auth);
+    taskLists = [];
+});

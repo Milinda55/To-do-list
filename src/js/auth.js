@@ -1,7 +1,6 @@
-
 import {auth} from './firebase-config.js';
 import $ from 'jquery';
-import {GoogleAuthProvider, onAuthStateChanged, signInWithPopup} from "firebase/auth";
+import {signOut, GoogleAuthProvider, onAuthStateChanged, signInWithPopup} from "firebase/auth";
 
 const provider = new GoogleAuthProvider();
 
