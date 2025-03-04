@@ -27,18 +27,41 @@ const taskLists = [new Task(1, "Task 1"),
 
 renderTasks();
 
+let lastTaskId = taskLists.length ;
+let currentTask = null;
+
 $("#frm-task").on('submit', () => {
-    $("#tasks-list #no-task").hide();
-    const taskDescription = $("#txt-task").val().trim();
-    const taskId = taskLists.length;
-    taskLists.push(new Task(taskId, taskDescription));
+    const txtTask = $("#txt-task");
+    if (!currentTask){
+        taskLists.push(new Task(++lastTaskId, txtTask.val().trim()));
+    }else{
+        currentTask.description = txtTask.val().trim();
+        currentTask = null;
+        $("#frm-task button").text('Add');
+    }
     renderTasks();
+    txtTask.val("").trigger('focus');
 });
 
-$('#task-list, #completed-task-list').on('change','.task-item input[type="checkbox"]', (e)=>{
-    const task = taskLists.find(task => task.id === e.currentTarget.id);
-    task.status = !task.status;
+$('#task-list > section, #completed-task-list > section')
+    .on('change', '.task-item input[type="checkbox"]', (e) => {
+        const task = taskLists.find(task => task.id === e.currentTarget.id);
+        task.status = !task.status;
+        renderTasks();
+    }).on('click', '.bi-trash', (e) => {
+    const taskId = $(e.currentTarget).parents(".task-item").find('input[type="checkbox"]').prop("id");
+    const taskIndex = taskLists.findIndex(task => task.id === taskId);
+    taskLists.splice(taskIndex, 1);
     renderTasks();
+}).on('click', '.bi-pencil', (e) => {
+    $(".task-item-selected").removeClass('task-item-selected');
+    const taskId = $(e.currentTarget).parents(".task-item")
+        .addClass('task-item-selected')
+        .find('input[type="checkbox"]').prop("id");
+    currentTask = taskLists.find(task => task.id === taskId);
+    $("#txt-task").val(currentTask.description)
+        .trigger('focus').trigger('select');
+    $("#frm-task button").text("Update");
 });
 
 function renderTasks(){
@@ -68,3 +91,15 @@ function renderTasks(){
             "#completed-task-list > section").append(task);
     }
 }
+
+$("#chk-mode")
+
+    .on('change', function () {
+    const darkMode = $(this).prop('checked');
+        $("html").attr("data-bs-theme", darkMode ? "dark" : "light");
+
+})
+if (matchMedia('(prefers-color-scheme: dark)').matches){
+    $("#chk-mode").trigger('click');
+}
+

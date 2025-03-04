@@ -17,6 +17,10 @@ body {
     }
 }
 
+.task-item-selected {
+    outline: 1px solid dodgerblue;
+}
+
 .task-item:hover i.bi-pencil {
     display: inline;
 }
@@ -35,4 +39,12 @@ body {
 
 .task-item:hover {
     background-color: lightgray;
+}
+
+:is(html, html[data-bs-theme="light"]) .task-item:hover {
+    background-color: lightgray;
+}
+
+html[data-bs-theme="dark"] .task-item:hover {
+    background-color: #3c3c3c;
 }
