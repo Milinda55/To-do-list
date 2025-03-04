@@ -1,26 +1,30 @@
 <!doctype html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>To-do List App</title>
   <link rel="stylesheet" href="./src/css/style.css">
   <script type="module" src="./src/js/main.js"></script>
 </head>
 <body>
-<section>
+<section id="app" class="d-none">
   <header class="d-flex justify-content-between
         align-items-center p-2 pt-3 border-bottom">
     <h2 class="m-0 d-flex align-items-center gap-1">
       <i class="bi bi-check-circle text-primary px-1 fs-1"></i>
       To-do List App
     </h2>
-    <div class="d-flex gap-2 fs-4">
-      <i class="bi bi-brightness-high"></i>
-      <div class="form-check form-switch">
-        <input id="chk-mode" class="form-check-input" type="checkbox" role="switch">
-        <i class="bi bi-moon-fill"></i>
+    <div class="d-flex gap-4 align-items-center">
+      <div class="d-flex gap-2 fs-4">
+        <i class="bi bi-brightness-high"></i>
+        <div class="form-check form-switch">
+          <input id="chk-mode" class="form-check-input" type="checkbox" role="switch">
+          <i class="bi bi-moon-fill"></i>
+        </div>
       </div>
+      <button id="btn-sign-out"
+              class="btn btn-warning">Sign Out</button>
     </div>
   </header>
   <main>
@@ -34,43 +38,70 @@
         </div>
       </form>
     </section>
-    <div id="task-list-wrapper" class="d-none">
+    <div id="task-lists-wrapper" class="d-none">
       <section id="task-list" class="p-2">
-      <!--          <h5 class="text-secondary">Tasks</h5>-->
-      <div id="no-task" class="text-center text-secondary-emphasis">
-        No tasks. Add your tasks.
-      </div>
-      <section>
-        <!--            <div class="task-item d-flex justify-content-between-->
-        <!--        p-2 align-items-center rounded-2 text-secondary-emphasis">-->
-        <!--              <div class="form-check">-->
-        <!--                <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault">-->
-        <!--                <label class="form-check-label" for="flexCheckDefault">-->
-        <!--                  Default checkbox-->
-        <!--                </label>-->
-        <!--              </div>-->
-        <!--              <div class="d-flex gap-3 fs-5">-->
-        <!--                <i class="bi bi-pencil" title="Edit"></i>-->
-        <!--                <i class="bi bi-trash" title="Delete"></i>-->
-        <!--              </div>-->
-        <!--            </div>-->
+        <div id="no-task" class="text-center text-secondary-emphasis">
+          No tasks. Add your tasks.
+        </div>
+        <section>
+          <!--            <div class="task-item d-flex justify-content-between-->
+          <!--        p-2 align-items-center rounded-2 text-secondary-emphasis">-->
+          <!--              <div class="form-check">-->
+          <!--                <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault">-->
+          <!--                <label class="form-check-label" for="flexCheckDefault">-->
+          <!--                  Default checkbox-->
+          <!--                </label>-->
+          <!--              </div>-->
+          <!--              <div class="d-flex gap-3 fs-5">-->
+          <!--                <i class="bi bi-pencil" title="Edit"></i>-->
+          <!--                <i class="bi bi-trash" title="Delete"></i>-->
+          <!--              </div>-->
+          <!--            </div>-->
+        </section>
       </section>
-    </section>
       <section id="completed-task-list" class="p-2">
-      <h6 class="text-secondary border-bottom p-2">
-        Completed Tasks</h6>
-      <section></section>
-    </section>
+        <h6 class="text-secondary border-bottom p-2">
+          Completed Tasks</h6>
+        <section></section>
+      </section>
     </div>
-
     <div id="loader-wrapper"
-      class="flex-column align-items-center">
+         class="flex-column align-items-center">
       <div class="loader"></div>
-      <hr>
-      <div class="mt-2">Please wait we are working on your data...</div>
-
+      <div class="mt-2">Please wait, we are loading your to-do list..</div>
     </div>
   </main>
+</section>
+<section id="login" class="vh-100
+    d-none d-flex justify-content-center align-items-center">
+  <main class="border text-center p-5">
+    <header class="d-flex justify-content-center">
+      <h2 class="m-0 d-flex align-items-center gap-1">
+        <i class="bi bi-check-circle
+                text-primary px-1 fs-1"></i>
+        To-do List App
+      </h2>
+    </header>
+    <p class="mt-4">Please sign in to continue</p>
+    <button id="btn-sign-in-google" class="btn btn-primary">
+      <i class="bi bi-google me-2"></i>
+      Sign in with Google
+    </button>
+    <footer class="border-top mt-4 pt-2 small">
+      Copyright &copy; 2025. DEP-13 All Rights Reserved.
+    </footer>
+  </main>
+</section>
+<section id="splash" class="d-flex vh-100
+ justify-content-center align-items-center">
+  <header class="d-flex justify-content-center">
+    <h1 class="m-0 d-flex align-items-center gap-1">
+      <i class="bi bi-check-circle
+                animate__bounceIn animate__animated
+                text-primary px-1 fs-1"></i>
+      To-do List App
+    </h1>
+  </header>
 </section>
 </body>
 </html>

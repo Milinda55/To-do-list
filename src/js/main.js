@@ -1,6 +1,19 @@
+import './auth.js';
 import $ from 'jquery';
-import {db} from './firebase-config.js';
-import {addDoc, collection, deleteDoc, doc, getDocs, serverTimestamp, updateDoc, query, orderBy} from "firebase/firestore";
+import {auth, db} from './firebase-config.js';
+import {
+    addDoc,
+    collection,
+    deleteDoc,
+    doc,
+    getDocs,
+    orderBy,
+    query,
+    serverTimestamp,
+    updateDoc,
+    where
+} from "firebase/firestore";
+import {onAuthStateChanged, signOut} from "firebase/auth";
 
 class Task {
     id;
@@ -14,14 +27,20 @@ class Task {
     }
 }
 
-const taskLists = [];
+let taskLists = [];
+let loggedUser = null;
 
-await loadDbTasks();
-renderTasks();
-
-$("#loader-wrapper").addClass("d-none");
-$("#task-list-wrapper").removeClass("d-none");
-
+onAuthStateChanged(auth, async user => {
+    if (user) {
+        loggedUser = user.email;
+        await loadDbTasks();
+        renderTasks();
+        $("#loader-wrapper").addClass("d-none");
+        $("#task-lists-wrapper").removeClass("d-none");
+    } else {
+        loggedUser = null;
+    }
+});
 
 //let lastTaskId = taskLists.length;
 let currentTask = null;
@@ -110,7 +129,9 @@ if (matchMedia('(prefers-color-scheme: dark)').matches) {
 
 async function loadDbTasks() {
     const collectionRef = collection(db, "/task");
-    const docsSnapshot = await getDocs(query(collectionRef, orderBy("createdAt")));
+    const docsSnapshot = await getDocs(query(collectionRef,
+        where("user", "==", loggedUser),
+        orderBy("createdAt")));
     docsSnapshot.forEach(doc => {
         taskLists.push(new Task(doc.id,
             doc.data().description,
@@ -124,7 +145,8 @@ async function addDbTask(description, status = false) {
         const docRef = await addDoc(collectionRef, {
             description,
             status,
-            createdAt: serverTimestamp()
+            createdAt: serverTimestamp(),
+            user: loggedUser
         });
         return docRef.id;
     } catch (e) {
@@ -158,3 +180,8 @@ async function updateDbTaskStatus(taskId, description, status) {
         return false;
     }
 }
+
+$("#btn-sign-out").on('click', async ()=>{
+    await signOut(auth);
+    taskLists = [];
+});
