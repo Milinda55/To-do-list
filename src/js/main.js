@@ -1,6 +1,6 @@
 import $ from 'jquery';
 import {app, db} from './firebase-config.js';
-import {collection, getDocs, addDoc, serverTimestamp} from "firebase/firestore";
+import {collection, getDocs, addDoc, serverTimestamp, doc, deleteDoc} from "firebase/firestore";
 
 
 // console.log(app);
@@ -62,11 +62,14 @@ $('#task-list > section, #completed-task-list > section')
         const task = taskLists.find(task => task.id === e.currentTarget.id);
         task.status = !task.status;
         renderTasks();
-    }).on('click', '.bi-trash', (e) => {
+    }).on('click', '.bi-trash', async (e) => {
     const taskId = $(e.currentTarget).parents(".task-item").find('input[type="checkbox"]').prop("id");
     const taskIndex = taskLists.findIndex(task => task.id === taskId);
-    taskLists.splice(taskIndex, 1);
-    renderTasks();
+    if (await deleteDbTask(taskId)) {
+        taskLists.splice(taskIndex, 1);
+        renderTasks();
+    }
+
 }).on('click', '.bi-pencil', (e) => {
     $(".task-item-selected").removeClass('task-item-selected');
     const taskId = $(e.currentTarget).parents(".task-item")
@@ -137,6 +140,19 @@ async function addDbTask(description, status = false) {
         return docRef.id;
     } catch (e) {
         console.log(e);
+    }
+}
+
+async function deleteDbTask(taskId){
+    try{
+        taskId = taskId.replace('task-',"");
+        // const collectionRef = collection(db , "/task");
+        const docRef = doc(db, `/task/${taskId}`);
+        await deleteDoc(docRef);
+        return true;
+    }catch (e) {
+        console.log(e)
+        return false;
     }
 }
 
