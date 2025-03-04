@@ -1,6 +1,6 @@
 import $ from 'jquery';
 import {db} from './firebase-config.js';
-import {addDoc, collection, deleteDoc, doc, getDocs, serverTimestamp, updateDoc} from "firebase/firestore";
+import {addDoc, collection, deleteDoc, doc, getDocs, serverTimestamp, updateDoc, query, orderBy} from "firebase/firestore";
 
 class Task {
     id;
@@ -18,6 +18,10 @@ const taskLists = [];
 
 await loadDbTasks();
 renderTasks();
+
+$("#loader-wrapper").addClass("d-none");
+$("#task-list-wrapper").removeClass("d-none");
+
 
 //let lastTaskId = taskLists.length;
 let currentTask = null;
@@ -106,7 +110,7 @@ if (matchMedia('(prefers-color-scheme: dark)').matches) {
 
 async function loadDbTasks() {
     const collectionRef = collection(db, "/task");
-    const docsSnapshot = await getDocs(collectionRef);
+    const docsSnapshot = await getDocs(query(collectionRef, orderBy("createdAt")));
     docsSnapshot.forEach(doc => {
         taskLists.push(new Task(doc.id,
             doc.data().description,
