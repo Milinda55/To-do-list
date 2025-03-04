@@ -92,9 +92,14 @@ function renderTasks(){
     }
 }
 
-$("#chk-mode").on('change', function () {
+$("#chk-mode")
+
+    .on('change', function () {
     const darkMode = $(this).prop('checked');
         $("html").attr("data-bs-theme", darkMode ? "dark" : "light");
 
+})
+if (matchMedia('(prefers-color-scheme: dark)').matches){
+    $("#chk-mode").trigger('click');
+}
 
-});
