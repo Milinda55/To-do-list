@@ -28,6 +28,7 @@ const taskLists = [new Task(1, "Task 1"),
 renderTasks();
 
 let lastTaskId = taskLists.length ;
+let currentTask = null;
 
 $("#frm-task").on('submit', () => {
     // $("#tasks-list #no-task").hide();
@@ -48,6 +49,15 @@ $('#task-list > section, #completed-task-list > section')
     const taskIndex = taskLists.findIndex(task => task.id === taskId);
     taskLists.splice(taskIndex, 1);
     renderTasks();
+}).on('click', '.bi-pencil', (e) => {
+    // alert("pencil")
+    const taskId = $(e.currentTarget).parents(".task-item").find('input[type="checkbox"]').prop("id");
+    currentTask = taskLists.find(task => task.id === taskId);
+    $("#txt-task").val(currentTask.description);
+    $("#frm-task button").text("Update");
+
+
+
 });
 
 function renderTasks(){
