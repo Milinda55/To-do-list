@@ -34,8 +34,19 @@ $("#frm-task").on('submit', () => {
     taskLists.push(new Task(taskId, taskDescription));
 });
 
-function renderTasks(){]
+$('.task-item-input[type="checkbox"]').on('change', (e) => {
+    alert(e.target.id);
+    const task = taskLists.find(task => task.id === e.target.id);
+    task.status = !task.status;
+    renderTasks();
 
+})
+
+function renderTasks(){
+
+    $("#task-list > section, #completed-task-list > section").empty();
+    const noTask = $("#no-task");
+    (taskLists.length) ? noTask.hide() : noTask.show();
 
     for (const {id, description, status} of taskLists) {
         const task = `
@@ -43,10 +54,10 @@ function renderTasks(){]
         p-2 align-items-center rounded-2 text-secondary-emphasis">
               <div class="form-check">
                 <input class="form-check-input" type="checkbox" 
-                value="" id="task-${id}"
+                value="" id="${id}"
                 ${status ? 'checked': ''}>
                 <label class="form-check-label" 
-                for="task-${id}">
+                for="${id}">
                   ${description}
                 </label>
               </div>
