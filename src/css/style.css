@@ -37,8 +37,8 @@ body {
     display: none;
 }
 
-.task-item i.bi-pencil:hover {
-    color: blue;
+.task-item i.bi-pencil-fill:hover {
+    color: green;
 }
 
 .task-item i.bi-trash:hover {

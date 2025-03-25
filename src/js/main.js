@@ -98,7 +98,7 @@ function renderTasks() {
             <div class="task-item d-flex justify-content-between
         p-2 align-items-center rounded-2 text-secondary-emphasis">
               <div class="form-check">
-                <input class="form-check-input" type="checkbox" 
+                <input class="form-check-input p-2 mt-2" type="checkbox" 
                 value="" id="${id}"
                 ${status ? 'checked' : ''}>
                 <label id="chk-text" class="form-check-label" 
@@ -107,7 +107,7 @@ function renderTasks() {
                 </label>
               </div>
               <div class="d-flex gap-3 fs-5">
-                <i class="bi bi-pencil" title="Edit"></i>
+                <i class="bi bi-pencil-fill" title="Edit"></i>
                 <i class="bi bi-trash" title="Delete"></i>
               </div>
             </div>        
