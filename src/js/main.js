@@ -101,7 +101,7 @@ function renderTasks() {
                 <input class="form-check-input" type="checkbox" 
                 value="" id="${id}"
                 ${status ? 'checked' : ''}>
-                <label class="form-check-label" 
+                <label id="chk-text" class="form-check-label" 
                 for="${id}">
                   ${description}
                 </label>
